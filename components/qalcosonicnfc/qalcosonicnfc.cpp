@@ -26,9 +26,7 @@ namespace esphome {
 namespace qalcosonicnfc {
 
 static const char *const TAG = "qalcosonicnfc";
-void testFunc () {
-    ESP_LOGI(TAG, TAG);
-}
+
 QalcosonicNfc::QalcosonicNfc(GPIOPin *mosi, GPIOPin *miso, GPIOPin *sck, GPIOPin *nss, GPIOPin *busy, GPIOPin *rst) {
     this->MOSI_ = mosi;
     this->MISO_ = miso;
@@ -294,7 +292,7 @@ void QalcosonicNfc::publishSensors() {
     this->water_flow_sensor_->publish_state(waterFlow/1000.0f);
     this->water_temperature_sensor_->publish_state(flowTemperature/100.0f);
     this->battery_level_sensor_->publish_state(batteryPercentage);
-    this->raw_data_sensor_->publish_state(getFormattedHexString("", responseLength, readBuffer).c_str());
+    //this->raw_data_sensor_->publish_state(getFormattedHexString("", responseLength, readBuffer).c_str());
 }
 
 void QalcosonicNfc::publishSensorsAsFailed() {

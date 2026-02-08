@@ -4,7 +4,7 @@ from esphome import pins
 from esphome.components import sensor, text_sensor#, spi
 from esphome.const import CONF_ID, CONF_NAME, CONF_PROTOCOL, CONF_UPDATE_INTERVAL, UNIT_CUBIC_METER, UNIT_CUBIC_METER_PER_HOUR, UNIT_CELSIUS, UNIT_PERCENT, ICON_WATER, ICON_THERMOMETER, ICON_BATTERY, STATE_CLASS_TOTAL_INCREASING, STATE_CLASS_MEASUREMENT, DEVICE_CLASS_WATER, DEVICE_CLASS_TEMPERATURE, DEVICE_CLASS_BATTERY
 
-CODEOWNERS = ["@dbmaxpayne"]
+CODEOWNERS = ["@dbmaxpayne","@j0eyd0ey39"]
 
 AUTO_LOAD = ["sensor", "text_sensor", "spi"]
 
@@ -56,7 +56,6 @@ CONFIG_SCHEMA = (
                 icon=ICON_BATTERY,
                 state_class=STATE_CLASS_MEASUREMENT,
                 device_class=DEVICE_CLASS_BATTERY,),
-            cv.Optional(CONF_RAW_DATA_SENSOR, default={ CONF_NAME: "Raw M-BUS Data",}): text_sensor.text_sensor_schema(),
             cv.Required(CONF_PN5180_MOSI_PIN): pins.gpio_output_pin_schema,
             cv.Required(CONF_PN5180_MISO_PIN): pins.gpio_output_pin_schema,
             cv.Required(CONF_PN5180_SCK_PIN): pins.gpio_output_pin_schema,
@@ -90,6 +89,4 @@ async def to_code(config):
     
     battery_level_sensor = await sensor.new_sensor(config.get(CONF_BATTERY_LEVEL_SENSOR))
     cg.add(var.set_battery_level_sensor(battery_level_sensor))
-    
-    raw_data_sensor = await text_sensor.new_text_sensor(config.get(CONF_RAW_DATA_SENSOR))
-    cg.add(var.set_raw_data_sensor(raw_data_sensor))
+   

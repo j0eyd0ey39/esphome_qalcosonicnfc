@@ -1,0 +1,88 @@
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [ qalcosonicnfc ]
+
+esphome:
+  name: qalcosonic-w1-nfc-reader
+  friendly_name: Qalcosonic W1 NFC Reader
+
+api:
+
+# pick one of the boards below, wemos d1 mini with esp8266 is quaranteed to work, I have not tested esp32 myself
+# change also the pin configuration in the qalcosonicnfc section below if you change the board
+#esp32:
+  #board: esp32-c3-devkitm-1
+#  board: esp32dev
+#  framework:
+#    type: arduino
+esp8266:               # For Wemos
+  board: nodemcuv2     # For Wemos
+
+network:
+    enable_ipv6: false
+
+substitutions:
+  my_wifi_ssid: 'WifiSSID'
+  my_wifi_password: 'WifiPassword'
+  my_ota_password: 'OtaPASSWORD'
+  common_reboot_timeout: '360min'
+
+##########################################################################################################
+
+wifi:
+  ssid: "$my_wifi_ssid"
+  password: "$my_wifi_password"
+
+  id: wifi_i
+  fast_connect: true
+  reboot_timeout: $common_reboot_timeout
+
+ota:
+  platform: esphome
+  password: "$my_ota_password"
+
+web_server:
+  port: 80
+
+qalcosonicnfc:
+  update_interval: 60s # How often should the component query the water meter for a value. I am not sure how this affects its battery life!
+
+  #esp32 pins
+#  pn5180_mosi_pin: GPIO23
+#  pn5180_miso_pin: GPIO19
+#  pn5180_sck_pin:  GPIO18
+#  pn5180_nss_pin:  GPIO14
+#  pn5180_busy_pin: GPIO16
+#  pn5180_rst_pin:  GPIO17
+
+  #esp8266 pins for wemos d1 mini
+  pn5180_mosi_pin: 'D7'
+  pn5180_miso_pin: 'D6'
+  pn5180_sck_pin:  'D5'
+  pn5180_nss_pin:  'D1'
+  pn5180_busy_pin: 'D2'
+  pn5180_rst_pin:  'D3'
+
+  water_usage_sensor:
+    name: "Water usage"
+  water_flow_sensor:
+    name: "Water flow"
+  water_temperature_sensor:
+    name: "Water temperature"
+  battery_level_sensor:
+    name: "Battery level"
+  # This sensor allows me to maybe find more useful data in the future.
+  # You should not need it and can disable it.
+  #raw_data_sensor:
+  #  name: "M-BUS Rohdaten"
+  #  disabled_by_default: True
+
+# Enable logging
+logger:
+  logs:
+    # This following can be set to DEBUG to get a lot of information like the raw SPI frames being exchanged between the ESP32 and the PN5180
+    qalcosonicnfc: INFO
+    PN5180: INFO
+    PN5180ISO15693: INFO
